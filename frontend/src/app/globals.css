@@ -1,0 +1,304 @@
+/* ─── Tailwind v4 ───────────────────────────────────────────── */
+@import "tailwindcss";
+
+/* ─── Font theme tokens ─────────────────────────────────────── */
+@theme {
+  --font-sans:  "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "P22 Mackinac W01 Book", "Georgia", ui-serif, serif;
+}
+
+/* ─── Base reset ────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #FFFFFF;
+  color: #191919;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #F4F3F3; }
+::-webkit-scrollbar-thumb { background: #D0D0D0; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #A0A0A0; }
+
+/* ─── Typography ────────────────────────────────────────────── */
+.font-display {
+  font-family: "P22 Mackinac W01 Book", "Georgia", ui-serif, serif !important;
+  font-weight: 400;
+}
+
+/* ─── Layout helpers ────────────────────────────────────────── */
+.container-page {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+@media (min-width: 640px) {
+  .container-page { padding-left: 40px; padding-right: 40px; }
+}
+
+@media (min-width: 1024px) {
+  .container-page { padding-left: 56px; padding-right: 56px; }
+}
+
+/* ─── White surface card ────────────────────────────────────── */
+.nx-card {
+  background: #FFFFFF;
+  border: 1px solid #E8E8E8;
+  border-radius: 16px;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.nx-card:hover {
+  border-color: #C8C8C8;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* Light grey surface */
+.nx-surface {
+  background: #F9F9F9;
+  border: 1px solid #EFEFEF;
+  border-radius: 12px;
+}
+
+/* ─── Buttons ────────────────────────────────────────────────── */
+.nx-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  background: #191919;
+  color: #FFFFFF;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+}
+.nx-btn-primary:hover {
+  background: #2A2A2A;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+  transform: translateY(-1px);
+}
+.nx-btn-primary:active { transform: translateY(0); }
+
+.nx-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  background: transparent;
+  color: #191919;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  border: 1.5px solid #E0E0E0;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+.nx-btn-secondary:hover { background: #F4F3F3; border-color: #C0C0C0; }
+
+/* ─── Inputs ─────────────────────────────────────────────────── */
+.nx-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #FFFFFF;
+  border: 1.5px solid #E0E0E0;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: "Inter", sans-serif;
+  color: #191919;
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+  appearance: none;
+}
+.nx-input:focus {
+  border-color: #191919;
+  box-shadow: 0 0 0 3px rgba(25,25,25,0.07);
+}
+.nx-input::placeholder { color: #ABABAB; }
+
+/* ─── Badge tags ─────────────────────────────────────────────── */
+.nx-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.nx-badge-green   { background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0; }
+.nx-badge-blue    { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+.nx-badge-amber   { background: #FFFBEB; color: #B45309; border: 1px solid #FDE68A; }
+.nx-badge-gray    { background: #F4F3F3; color: #5A5A5A; border: 1px solid #E0E0E0; }
+.nx-badge-dark    { background: #191919; color: #FFFFFF; border: 1px solid #191919; }
+
+/* ─── Live dot ───────────────────────────────────────────────── */
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #10B981;
+  border-radius: 50%;
+  animation: live-pulse 2s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+  50%       { box-shadow: 0 0 0 5px rgba(16,185,129,0); }
+}
+
+/* ─── Progress bar ───────────────────────────────────────────── */
+.nx-progress-track {
+  height: 6px;
+  background: #EFEFEF;
+  border-radius: 100px;
+  overflow: hidden;
+}
+.nx-progress-fill {
+  height: 100%;
+  background: #191919;
+  border-radius: 100px;
+  transition: width 600ms ease;
+}
+
+/* ─── Stat card ──────────────────────────────────────────────── */
+.nx-stat {
+  background: #FFFFFF;
+  border: 1.5px solid #E8E8E8;
+  border-radius: 14px;
+  padding: 20px;
+  transition: border-color 200ms ease, transform 200ms ease;
+}
+.nx-stat:hover { border-color: #C0C0C0; transform: translateY(-2px); }
+
+/* ─── Feature row (01 / Autonomous etc.) ────────────────────── */
+.nx-feature-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: #F4F3F3;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 200ms ease;
+  text-decoration: none;
+}
+.nx-feature-row:hover { background: #EAEAEA; }
+
+/* ─── Data table ─────────────────────────────────────────────── */
+.nx-table { width: 100%; border-collapse: collapse; }
+.nx-table thead tr { border-bottom: 1px solid #E8E8E8; background: #FAFAFA; }
+.nx-table thead th {
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(25,25,25,0.38);
+  white-space: nowrap;
+  text-align: left;
+}
+.nx-table tbody td {
+  padding: 13px 16px;
+  border-bottom: 1px solid #F4F3F3;
+  font-size: 13.5px;
+}
+.nx-table tbody tr:last-child td { border-bottom: none; }
+.nx-table tbody tr:hover td { background: #FAFAFA; }
+
+/* ─── Section spacing ────────────────────────────────────────── */
+.nx-section { padding-top: 96px; padding-bottom: 96px; }
+
+@media (min-width: 768px) { .nx-section { padding-top: 128px; padding-bottom: 128px; } }
+
+/* ─── Animations ─────────────────────────────────────────────── */
+@keyframes nx-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes nx-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes nx-float   {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+.nx-anim-fade-up   { animation: nx-fade-up  0.65s cubic-bezier(0.16,1,0.3,1) both; }
+.nx-anim-fade-in   { animation: nx-fade-in  0.5s ease both; }
+.nx-anim-float     { animation: nx-float    4s ease-in-out infinite; }
+
+/* ─── Tab bar ────────────────────────────────────────────────── */
+.nx-tab {
+  padding: 10px 20px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 200ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: rgba(25,25,25,0.45);
+}
+.nx-tab:hover  { color: #191919; background: #F4F3F3; }
+.nx-tab.active { color: #FFFFFF; background: #191919; }
+
+/* ─── Nav link ───────────────────────────────────────────────── */
+.nx-nav-link {
+  font-size: 14px;
+  color: rgba(25,25,25,0.5);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+.nx-nav-link:hover { color: #191919; }
+.nx-nav-link.active { color: #191919; font-weight: 500; }
+
+/* ─── Hero panel (glass bottom card) ────────────────────────── */
+.hero-panel {
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(230,230,230,0.8);
+  border-bottom: none;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.06);
+}
+
+/* ─── Canvas / video bg helper ───────────────────────────────── */
+.media-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* ─── Scrollable table wrapper ────────────────────────────────── */
+.table-scroll { overflow-x: auto; border-radius: 0 0 16px 16px; }
