@@ -151,7 +151,7 @@ export default function VaultTab() {
               </div>
               <div className="flex justify-between mt-2.5 text-xs px-1">
                 <span className="text-[#191919]/40 flex items-center gap-2">
-                  Balance: {nativeBalance ? Number(nativeBalance.formatted).toFixed(4) : "0.00"} A0GI
+                  Balance: {nativeBalance ? Number(formatUnits(nativeBalance.value, nativeBalance.decimals)).toFixed(4) : "0.00"} A0GI
                   <div className="flex gap-2">
                     <a 
                       href="https://faucet.0g.ai/" 
@@ -165,7 +165,7 @@ export default function VaultTab() {
                 </span>
                 <button 
                   className="text-[#191919] font-semibold hover:opacity-75 transition-opacity" 
-                  onClick={() => setAmount(nativeBalance ? nativeBalance.formatted : "0")}
+                  onClick={() => setAmount(nativeBalance ? formatUnits(nativeBalance.value, nativeBalance.decimals) : "0")}
                 >
                   Max
                 </button>

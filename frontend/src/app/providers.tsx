@@ -60,7 +60,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
           logo: 'https://auth.privy.io/logos/privy-logo.png', // Optional default logo
         },
         embeddedWallets: {
-          createOnLogin: 'users-without-wallets',
+          ethereum: {
+            createOnLogin: 'users-without-wallets',
+          },
         },
       }}
     >
