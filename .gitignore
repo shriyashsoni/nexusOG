@@ -24,6 +24,7 @@ contracts/cache/
 .env
 .env.*
 !.env.example
+nexus_evm_details.txt
 
 # debug logs
 npm-debug.log*
