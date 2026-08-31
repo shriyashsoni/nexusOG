@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAccount, useWriteContract, useReadContract, useBalance } from "wagmi";
 import { ArrowDownToLine, ArrowUpFromLine, ShieldAlert, Wallet, Cpu, CheckCircle2, FileText, RefreshCw, Check } from "lucide-react";
 import { parseUnits, formatUnits } from "viem";
@@ -33,6 +33,22 @@ export default function VaultTab() {
   
   const [isProcessing, setIsProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [activeStep, setActiveStep] = useState(1);
+
+  useEffect(() => {
+    if (!isProcessing) {
+      setActiveStep(1);
+      return;
+    }
+    const timer1 = setTimeout(() => setActiveStep(2), 1200);
+    const timer2 = setTimeout(() => setActiveStep(3), 2400);
+    const timer3 = setTimeout(() => setActiveStep(4), 3600);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
+  }, [isProcessing]);
 
   const { data: stats }: any = useReadContract({
     address: NEXUS_VAULT_ADDRESS as `0x${string}`,
@@ -382,7 +398,7 @@ export default function VaultTab() {
             <div>
               <h4 className="text-base font-bold text-[#191919]">Confirming Transaction</h4>
               <p className="text-xs text-[#191919]/50 mt-1">
-                Please approve this action in your wallet. You are interacting with the following smart contract:
+                Please approve this action in your wallet. Interacting with the contract on the 0G Galileo Testnet.
               </p>
             </div>
             
@@ -412,6 +428,42 @@ export default function VaultTab() {
                   <span className="font-bold text-[#191919]">{amount} A0GI</span>
                 </div>
               )}
+            </div>
+
+            {/* Stepper showing advanced internal transactions */}
+            <div className="w-full text-left space-y-3 pt-2 border-t border-gray-100">
+              <p className="text-[10px] font-bold text-[#191919]/40 uppercase tracking-wider">Internal Staking Steps</p>
+              <div className="space-y-2.5">
+                {[
+                  { title: "Approve transaction in wallet", desc: "Confirm gas fee and transfer authorization" },
+                  { title: "Wrap native A0GI to WOG", desc: "Converts native tokens to wrapped ERC-20 standard" },
+                  { title: "AI Agent yield route allocation", desc: "Calculates optimal protocol distribution" },
+                  { title: "Stake WOG & Mint nvOG Shares", desc: "Allocates assets to contract to begin yield capture" }
+                ].map((s, idx) => {
+                  const stepNum = idx + 1;
+                  const isDone = activeStep > stepNum;
+                  const isCurrent = activeStep === stepNum;
+                  return (
+                    <div key={idx} className="flex items-start gap-3">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 border transition-all ${
+                        isDone ? "bg-emerald-500 border-emerald-500 text-white" :
+                        isCurrent ? "bg-[#191919] border-[#191919] text-white animate-pulse" :
+                        "bg-[#F9F9F9] border-gray-200 text-[#191919]/30"
+                      }`}>
+                        {isDone ? "✓" : stepNum}
+                      </div>
+                      <div>
+                        <p className={`text-xs font-bold transition-colors ${isCurrent || isDone ? "text-[#191919]" : "text-[#191919]/30"}`}>
+                          {s.title}
+                        </p>
+                        <p className={`text-[10px] transition-colors ${isCurrent || isDone ? "text-[#191919]/40" : "text-[#191919]/20"}`}>
+                          {s.desc}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
             
             <p className="text-[10px] text-[#191919]/40">
