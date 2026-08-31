@@ -1,0 +1,12 @@
+{
+  "network": "0g-testnet",
+  "chainId": "16602",
+  "timestamp": "2026-08-29T06:25:46.777Z",
+  "deployer": "0xbCF71F804b214B75067a79d8D8aA6Dace96bAc63",
+  "contracts": {
+    "Guardian": "0x1ee4db294Ec9f732f9197fB1a1B36Bf04fbe6Eb1",
+    "AgentRegistry": "0x4391e6D983caF7142cEB9C4748C5CDf7d8f18b6d",
+    "WOG": "0x804A6881d64593E0d6d72551E21e23777bbc807C",
+    "NexusVault": "0x31E0938512Fc66844d04CB1f489b584C349e53dD"
+  }
+}

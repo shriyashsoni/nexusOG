@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAccount, useWriteContract, useReadContract, useBalance } from "wagmi";
 import { ArrowDownToLine, ArrowUpFromLine, ShieldAlert, Wallet, Cpu, CheckCircle2, FileText, RefreshCw, Check } from "lucide-react";
 import { parseUnits, formatUnits } from "viem";
+import { getContractAddresses } from "@/lib/contracts";
 
 const NEXUS_VAULT_ABI = [
   { name: 'depositNative', type: 'function', stateMutability: 'payable', inputs: [{ name: 'receiver', type: 'address' }], outputs: [{ type: 'uint256' }] },
@@ -15,10 +16,6 @@ const GUARDIAN_ABI = [
   { name: 'setUserPolicy', type: 'function', stateMutability: 'nonpayable', inputs: [{ name: 'maxRiskTolerance', type: 'uint256' }, { name: 'stopLossBps', type: 'uint256' }, { name: 'maxSingleProtocolBps', type: 'uint256' }, { name: 'blacklistedProtocols', type: 'address[]' }], outputs: [] }
 ];
 
-// 0G Galileo Testnet Addresses (Updated Native WOG Deployment)
-const NEXUS_VAULT_ADDRESS = "0x31E0938512Fc66844d04CB1f489b584C349e53dD"; 
-const GUARDIAN_ADDRESS = "0x1ee4db294Ec9f732f9197fB1a1B36Bf04fbe6Eb1";
-
 type Tab = "deposit" | "withdraw" | "policy";
 
 export default function VaultTab() {
@@ -28,8 +25,11 @@ export default function VaultTab() {
   const [stopLoss, setStopLoss] = useState(5);
   const [maxProtocol, setMaxProtocol] = useState(40);
   
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
   const { writeContractAsync } = useWriteContract();
+  const addresses = getContractAddresses(chainId);
+  const NEXUS_VAULT_ADDRESS = addresses.NexusVault;
+  const GUARDIAN_ADDRESS = addresses.Guardian;
   
   const [isProcessing, setIsProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -372,6 +372,54 @@ export default function VaultTab() {
           </div>
         </div>
       </div>
+
+      {isProcessing && (
+        <div className="fixed inset-0 bg-[#191919]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 nx-anim-fade-in">
+          <div className="bg-white border border-gray-200/90 rounded-2xl p-6 max-w-sm w-full shadow-2xl flex flex-col items-center text-center space-y-4">
+            <div className="w-12 h-12 rounded-full bg-[#191919]/5 flex items-center justify-center animate-pulse">
+              <RefreshCw className="w-6 h-6 text-[#191919] animate-spin" />
+            </div>
+            <div>
+              <h4 className="text-base font-bold text-[#191919]">Confirming Transaction</h4>
+              <p className="text-xs text-[#191919]/50 mt-1">
+                Please approve this action in your wallet. You are interacting with the following smart contract:
+              </p>
+            </div>
+            
+            <div className="bg-[#F9F9F9] border border-gray-100 rounded-xl p-3 w-full text-left space-y-2">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-[#191919]/40 font-semibold">Target Contract</span>
+                <span className="font-bold text-[#191919] bg-white px-2 py-0.5 rounded border border-gray-200 shadow-sm">
+                  {tab === "policy" ? "Guardian" : "NexusVault"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-[#191919]/40 font-semibold">Address</span>
+                <span className="font-mono text-[10px] text-[#191919]/70 truncate max-w-[180px]">
+                  {tab === "policy" ? GUARDIAN_ADDRESS : NEXUS_VAULT_ADDRESS}
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-[#191919]/40 font-semibold">Network</span>
+                <span className="font-semibold text-emerald-600 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  0G Galileo Testnet
+                </span>
+              </div>
+              {amount && (tab === "deposit" || tab === "withdraw") && (
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-[#191919]/40 font-semibold">Amount</span>
+                  <span className="font-bold text-[#191919]">{amount} A0GI</span>
+                </div>
+              )}
+            </div>
+            
+            <p className="text-[10px] text-[#191919]/40">
+              Contract addresses update automatically based on your active chain.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

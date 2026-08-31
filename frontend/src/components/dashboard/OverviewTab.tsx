@@ -4,8 +4,8 @@ import { useState } from "react";
 import { ArrowUpRight, TrendingUp, ShieldCheck, Database, Cpu, Settings, RefreshCw, Plus, Check } from "lucide-react";
 import { useReadContract, useWriteContract, useAccount } from "wagmi";
 import { parseUnits } from "viem";
+import { getContractAddresses } from "@/lib/contracts";
 
-const NEXUS_VAULT_ADDRESS = "0x31E0938512Fc66844d04CB1f489b584C349e53dD";
 const NEXUS_VAULT_ABI = [
   { name: 'getVaultStats', type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'tuple', components: [{ name: 'totalAssets', type: 'uint256' }, { name: 'totalShares', type: 'uint256' }, { name: 'currentAPY', type: 'uint256' }, { name: 'allTimeYield', type: 'uint256' }, { name: 'totalDecisions', type: 'uint256' }, { name: 'lastRebalance', type: 'uint256' }, { name: 'agentId', type: 'uint256' }, { name: 'riskScore', type: 'uint256' }] }] },
   { name: 'depositNative', type: 'function', stateMutability: 'payable', inputs: [{ name: 'receiver', type: 'address' }], outputs: [{ type: 'uint256' }] }
@@ -38,15 +38,16 @@ const HISTORY_SETS = {
 const DECISIONS: any[] = [];
 
 export default function OverviewTab() {
+  const { address, chainId } = useAccount();
+  const { writeContractAsync } = useWriteContract();
+  const addresses = getContractAddresses(chainId);
+
   const { data: stats }: any = useReadContract({
-    address: NEXUS_VAULT_ADDRESS as `0x${string}`,
+    address: addresses.NexusVault as `0x${string}`,
     abi: NEXUS_VAULT_ABI,
     functionName: 'getVaultStats',
-    query: { refetchInterval: 5000 }
+    query: { refetchInterval: 5000, enabled: !!addresses.NexusVault }
   });
-
-  const { address } = useAccount();
-  const { writeContractAsync } = useWriteContract();
 
 
   const [chartInterval, setChartInterval] = useState<"1D" | "1W" | "1M" | "All">("1W");
@@ -87,7 +88,7 @@ export default function OverviewTab() {
       const amountInWei = parseUnits(quickAmount, 18);
       
       await writeContractAsync({
-        address: NEXUS_VAULT_ADDRESS as `0x${string}`,
+        address: addresses.NexusVault as `0x${string}`,
         abi: NEXUS_VAULT_ABI,
         functionName: 'depositNative',
         args: [address],
@@ -441,6 +442,54 @@ export default function OverviewTab() {
           ))}
         </div>
       </div>
+
+      {isDepositing && (
+        <div className="fixed inset-0 bg-[#191919]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 nx-anim-fade-in">
+          <div className="bg-white border border-gray-200/90 rounded-2xl p-6 max-w-sm w-full shadow-2xl flex flex-col items-center text-center space-y-4">
+            <div className="w-12 h-12 rounded-full bg-[#191919]/5 flex items-center justify-center animate-pulse">
+              <RefreshCw className="w-6 h-6 text-[#191919] animate-spin" />
+            </div>
+            <div>
+              <h4 className="text-base font-bold text-[#191919]">Confirming Transaction</h4>
+              <p className="text-xs text-[#191919]/50 mt-1">
+                Please approve this action in your wallet. You are interacting with the following smart contract:
+              </p>
+            </div>
+            
+            <div className="bg-[#F9F9F9] border border-gray-100 rounded-xl p-3 w-full text-left space-y-2">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-[#191919]/40 font-semibold">Target Contract</span>
+                <span className="font-bold text-[#191919] bg-white px-2 py-0.5 rounded border border-gray-200 shadow-sm">
+                  NexusVault
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-[#191919]/40 font-semibold">Address</span>
+                <span className="font-mono text-[10px] text-[#191919]/70 truncate max-w-[180px]">
+                  {addresses.NexusVault}
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-[#191919]/40 font-semibold">Network</span>
+                <span className="font-semibold text-emerald-600 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  0G Galileo Testnet
+                </span>
+              </div>
+              {quickAmount && (
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-[#191919]/40 font-semibold">Amount</span>
+                  <span className="font-bold text-[#191919]">{quickAmount} A0GI</span>
+                </div>
+              )}
+            </div>
+            
+            <p className="text-[10px] text-[#191919]/40">
+              Contract addresses update automatically based on your active chain.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

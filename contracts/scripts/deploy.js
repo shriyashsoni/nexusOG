@@ -87,6 +87,18 @@ async function main() {
   const filename = `deployments-${network.name}.json`;
   fs.writeFileSync(filename, JSON.stringify(deployData, null, 2));
 
+  // Also write copy to frontend deployments directory for automatic UI updates
+  try {
+    const frontendDir = "../frontend/src/deployments";
+    if (!fs.existsSync(frontendDir)) {
+      fs.mkdirSync(frontendDir, { recursive: true });
+    }
+    fs.writeFileSync(`${frontendDir}/${filename}`, JSON.stringify(deployData, null, 2));
+    console.log(`     ✅  Also saved copy to frontend deployments`);
+  } catch (e) {
+    console.log(`     ⚠️  Could not write copy to frontend folder: ${e.message}`);
+  }
+
   console.log("\n╔══════════════════════════════════════════════╗");
   console.log("║            ✅ DEPLOYMENT COMPLETE             ║");
   console.log("╠══════════════════════════════════════════════╣");
