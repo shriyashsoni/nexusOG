@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import { ShieldCheck } from "lucide-react";
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { usePrivy } from "@privy-io/react-auth";
 
 // Import new Tab Components
 import OverviewTab from "@/components/dashboard/OverviewTab";
@@ -17,6 +17,7 @@ type MainTab = "overview" | "vault" | "agent" | "audit" | "security";
 
 /* ─────────────────────── Locked Screen ─────────────────────── */
 function LockedScreen() {
+  const { login } = usePrivy();
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Navbar />
@@ -28,7 +29,12 @@ function LockedScreen() {
         <p className="text-[#191919]/50 text-base max-w-sm mb-8 leading-relaxed">
           Connect your wallet to access the live vault dashboard, AI agent metrics, and real-time 0G DA proofs.
         </p>
-        <ConnectButton />
+        <button
+          onClick={login}
+          className="nx-btn-primary px-6 py-3 rounded-xl text-sm font-bold hover:shadow-[0_4px_12px_rgba(25,25,25,0.15)] transition-all"
+        >
+          Connect Wallet
+        </button>
       </div>
     </div>
   );
